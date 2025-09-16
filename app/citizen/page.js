@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function CitizenForm() {
     const [submitted, setSubmitted] = useState(false);
@@ -48,12 +49,12 @@ export default function CitizenForm() {
                 <p className="font-mono bg-gray-200 p-2 rounded">
                     Your Tracking ID: <span className="font-bold">{trackingId}</span>
                 </p>
-                <a
+                <Link
                     href="/"
                     className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700"
                 >
                     Back to Home
-                </a>
+                </Link>
             </main>
         );
     }
