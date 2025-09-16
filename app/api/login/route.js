@@ -1,3 +1,4 @@
+// app/api/login/route.js
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
@@ -7,9 +8,19 @@ export async function POST(req) {
         username === process.env.ADMIN_USER &&
         password === process.env.ADMIN_PASS
     ) {
-        // ✅ Set a simple cookie
         const res = NextResponse.json({ success: true });
-        res.cookies.set("isAdmin", "true", { httpOnly: true });
+
+        // set cookie for the whole app
+        res.cookies.set({
+            name: "isAdmin",
+            value: "true",
+            httpOnly: true,
+            path: "/",                      // IMPORTANT
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 60 * 60 * 8,            // 8 hours (change if needed)
+        });
+
         return res;
     }
 
