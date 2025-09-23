@@ -1,4 +1,3 @@
-// app/api/login/route.js
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
@@ -15,10 +14,10 @@ export async function POST(req) {
             name: "isAdmin",
             value: "true",
             httpOnly: true,
-            path: "/",                      // IMPORTANT
+            path: "/",
             sameSite: "lax",
             secure: process.env.NODE_ENV === "production",
-            maxAge: 60 * 60 * 8,            // 8 hours (change if needed)
+            // Removed maxAge and expires to make it a session cookie
         });
 
         return res;

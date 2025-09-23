@@ -1,21 +1,26 @@
-import connectDB from "@/lib/mongodb";
-import Issue from "@/models/Issue";
+import clientPromise from "@/lib/mongodb";
+import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
-// Update issue by ID
 export async function PUT(req, { params }) {
-    await connectDB();
-    const { id } = params;
-    const { status } = await req.json();
-
     try {
-        const updatedIssue = await Issue.findByIdAndUpdate(
-            id,
-            { status },
-            { new: true }
+        const client = await clientPromise;
+        const db = client.db("civic-issues");
+        const { id } = params;
+        const { status } = await req.json();
+
+        const result = await db.collection("issues").updateOne(
+            { _id: new ObjectId(id) },
+            { $set: { status } }
         );
-        return NextResponse.json(updatedIssue);
-    } catch (err) {
+
+        if (result.matchedCount === 0) {
+            return NextResponse.json({ error: "Issue not found" }, { status: 404 });
+        }
+
+        return NextResponse.json({ message: "Status updated successfully" });
+    } catch (error) {
+        console.error("PUT API ERROR:", error);
         return NextResponse.json(
             { error: "Failed to update issue" },
             { status: 500 }
